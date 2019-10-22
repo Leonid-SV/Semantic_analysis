@@ -2,6 +2,15 @@
 __pycache__/
 *.py[cod]
 *$py.class
+get_data.py
+Toxic.jpg
+*.json
+*.log
+*.xml
+*.db
+
+# some files
+xml_sqllite_convertor_rbl.py
 
 # C extensions
 *.so

@@ -11,23 +11,21 @@
     <title>SemanticDev</title>
   </head>
   <body>
-
       <div class="container">
           <h4> {{ title }} </h4>
-
-        <form action="" method="post">
-            <input name = 'input' class="form-control" placeholder="введите текст">
-            <div class="invalid-feedback">Введите запрос</div>
-            <br/>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-        <br/>
-        <br/>
-        <br/>
-        <p>Результат обработки данных:</p>
-        <br/>
-        <h3> {{answer}} </h3>
-
+            <form action="" method="POST">
+                    {{ stf.hidden_tag() }}
+                <p>
+                    <!-- {{ stf.text.label }} <br> -->
+                    {{ stf.text() }}
+                </p>
+                <br>
+                    {{ stf.submit() }}
+            </form>
+        <br>
+        <br>
+        <p>Результат обработки данных:</p> <h3> {{answer}} </h3>
+      </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
