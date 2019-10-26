@@ -1,43 +1,52 @@
+# -*- coding: utf-8 -*-
 import psycopg2
 from psycopg2 import sql
 from contextlib import closing
 
-def db_execute(keyword):
+def db_request(keyword):
 
-    request_form = 'SELECT text FROM comments_short WHERE id = {}'
+    request_id = "SELECT id FROM posts WHERE tags LIKE '%<{}>%'"
+    request_comm = "SELECT text FROM comments_s WHERE postid IN ({})"
 
-    # подключение к базе данных ToxicStackOverflow
+    # РїРѕРґРєР»СЋС‡РµРЅРёРµ Рє Р±Р°Р·Рµ РґР°РЅРЅС‹С… ToxicStackOverflow
     with closing(psycopg2.connect(dbname='ToxicStackOverflow', user='postgres', password='2409', host='localhost')) as conn:
         with conn.cursor() as cursor:
 
-            # запрос по словам из списка
-            result = []
+            # Р·Р°РїСЂРѕСЃ id РїРѕ СЃР»РѕРІР°Рј РёР· СЃРїРёСЃРєР°
+            id_result = []
             if isinstance(keyword, list):
                 for kw in keyword:
-                    query = request_form.format(kw)
+                    query = request_id.format(kw)
                     cursor.execute(query)
 
                     for row in cursor:
-                        result.append(row)
+                        id_result.append(row[0])
+
             else:
-                query = request_form.format(keyword)
+                query = request_id.format(keyword)
                 cursor.execute(query)
 
                 for row in cursor:
-                    result.append(row)
+                    id_result.append(row[0])
+
+            query_comments = request_comm.format(sql.SQL(', ').join([sql.Literal(r) for r in id_result]).as_string(conn))
+
+            cursor.execute(query_comments)
+
+            comm_result = []
+            for r in cursor:
+                comm_result.append(r[0])
+                if r[0]: print(r[0])
+
+            print(comm_result)
+
         conn.commit()
-    return result
+        conn.close()
 
-# print('+'*60)
-# print(db_execute([2, 16]))
-# print('+'*60)
+    return comm_result
 
-import webapp
-from webapp import create_app
 
-app = create_app()
-with app.app_context():
-
-    pass
+if __name__ == '__main__':
+    db_request('python')
 
 

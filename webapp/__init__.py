@@ -1,37 +1,37 @@
 from flask import Flask, render_template, request
-from webapp.form import SmallTextField
-from webapp.model import db, ModelComments
-from request_from_db import db_execute
-
+# from webapp.form import SmallTextField
+# from webapp.model import db, ModelComments
+from request_from_db import db_request
 
 def create_app():
-
     app = Flask(__name__)
     app.config.from_pyfile('config.py')
-    #инициализация базы данных. Строка идет после строчки с config потому что для инициализации требуется ключ
-    print('******************')
-    db.init_app(app)
 
     @app.route('/', methods=['POST', 'GET'])
     def inputs():
         title = 'Введите запрос'
-        stf = SmallTextField()
-        answer = ''
+        global result
+        result = ''
         if request.method == 'POST':
             answer = request.form['text']
 
-        try:
-            res = db_execute(int(answer))[0]
-        except:
-            res = '----- no answer -----'
+            try:
+                result = db_request(answer)
+            except:
+                result = '----- no answer -----'
+            finally:
+                for r in result:
+                    print(type(r))
+                    print(r)
 
-        print(type(res))
-        print(res)
+        # if request.method == 'POST':
+        #     reset = request.form['reset']
+        #     result = ''
 
-        return render_template('index_test.html', title=title, stf=stf, answer=res)
+        return render_template('index_test.html', title=title, answer=result)
 
+    result = ''
     return app
-
 
 
 # запуск сервера Linux из терминала

@@ -9,6 +9,10 @@ Toxic.jpg
 *.xml
 *.db
 
+
+# folders
+webapp_f/
+
 # some files
 xml_sqllite_convertor_rbl.py
 

@@ -18,38 +18,38 @@ ANATHOMY = {
   #   'Date': 'TIMESTAMP',
   #   'TagBased': 'BOOLEAN',
   # },
-  # 'comments_short': {
-  #   'Id': 'INTEGER',
-  #   'PostId': 'INTEGER',
-  #   'Score': 'INTEGER',
-  #   'Text': 'TEXT',
-  #   'CreationDate': 'TIMESTAMP',
-  #   'UserId': 'INTEGER',
-  #   'UserDisplayName': 'TEXT'
-  # },
-  'posts': {
-      'Id': 'INTEGER',
-      'PostTypeId': 'INTEGER',  # 1: Question, 2: Answer
-      'ParentId': 'INTEGER',  # (only present if PostTypeId is 2)
-      'AcceptedAnswerId': 'INTEGER',  # (only present if PostTypeId is 1)
-      'CreationDate': 'TIMESTAMP',
-      'Score': 'INTEGER',
-      'ViewCount': 'INTEGER',
-      'Body': 'TEXT',
-      'OwnerUserId': 'INTEGER',  # (present only if user has not been deleted)
-      'OwnerDisplayName': 'TEXT',
-      'LastEditorUserId': 'INTEGER',
-      'LastEditorDisplayName': 'TEXT',  # ="Rich B"
-      'LastEditDate': 'TIMESTAMP',  #="2009-03-05T22:28:34.823"
-      'LastActivityDate': 'TIMESTAMP',  #="2009-03-11T12:51:01.480"
-      'CommunityOwnedDate': 'TIMESTAMP',  #(present only if post is community wikied)
-      'Title': 'TEXT',
-      'Tags': 'TEXT',
-      'AnswerCount': 'INTEGER',
-      'CommentCount': 'INTEGER',
-      'FavoriteCount': 'INTEGER',
-      'ClosedDate': 'TIMESTAMP'
+  'comments': {
+    'Id': 'INTEGER',
+    'PostId': 'INTEGER',
+    'Score': 'INTEGER',
+    'Text': 'TEXT',
+    'CreationDate': 'TIMESTAMP',
+    'UserId': 'INTEGER',
+    'UserDisplayName': 'TEXT'
   },
+  # 'posts': {
+  #     'Id': 'INTEGER',
+  #     'PostTypeId': 'INTEGER',  # 1: Question, 2: Answer
+  #     'ParentId': 'INTEGER',  # (only present if PostTypeId is 2)
+  #     'AcceptedAnswerId': 'INTEGER',  # (only present if PostTypeId is 1)
+  #     'CreationDate': 'TIMESTAMP',
+  #     'Score': 'INTEGER',
+  #     'ViewCount': 'INTEGER',
+  #     'Body': 'TEXT',
+  #     'OwnerUserId': 'INTEGER',  # (present only if user has not been deleted)
+  #     'OwnerDisplayName': 'TEXT',
+  #     'LastEditorUserId': 'INTEGER',
+  #     'LastEditorDisplayName': 'TEXT',  # ="Rich B"
+  #     'LastEditDate': 'TIMESTAMP',  #="2009-03-05T22:28:34.823"
+  #     'LastActivityDate': 'TIMESTAMP',  #="2009-03-11T12:51:01.480"
+  #     'CommunityOwnedDate': 'TIMESTAMP',  #(present only if post is community wikied)
+  #     'Title': 'TEXT',
+  #     'Tags': 'TEXT',
+  #     'AnswerCount': 'INTEGER',
+  #     'CommentCount': 'INTEGER',
+  #     'FavoriteCount': 'INTEGER',
+  #     'ClosedDate': 'TIMESTAMP'
+  # },
   # 'votes': {
   #     'Id': 'INTEGER',
   #     'PostId': 'INTEGER',
@@ -117,7 +117,7 @@ ANATHOMY = {
 
 
 def dump_files(file_names, anathomy,
-             dump_path='.',
+             dump_path='D:/',
              create_query='CREATE TABLE IF NOT EXISTS {table} ({fields})',
              insert_query='INSERT INTO {table} ({columns}) VALUES ({values})',
              log_filename='so-parser.log'):
@@ -144,7 +144,7 @@ def dump_files(file_names, anathomy,
                   try:
                       logging.info(sql_create)
                       print('*' * 40)
-                      print(sql_create) ############
+                      print(sql_create)
                       cursor.execute(sql_create)
                       print('*' * 40)
                   except Exception as e:
@@ -154,47 +154,47 @@ def dump_files(file_names, anathomy,
                   tree = iter(tree)
 
                   count = 0
-                  for events, row in tree:
-                      try:
-                          if row.attrib.values():
-                              logging.debug(row.attrib.keys())
-                              vals = []
-                              keys = []
-                              for key, val in row.attrib.items():
-                                  keys.append(key)
-                                  if anathomy[table_name][key] == 'INTEGER':
-                                      vals.append(int(val))
-                                  elif anathomy[table_name][key] == 'BOOLEAN':
-                                      vals.append(1 if val == "TRUE" else 0)
-                                  else:
-                                      vals.append(val)
 
-                              query = insert_query.format(
-                                  table = table_name,
-                                  columns = (', ').join(k for k in keys),
-                                  values = sql.SQL(', ').join(sql.Literal(v) for v in vals).as_string(conn)
-                              )
+                  while count <= 10000000:
+                      for events, row in tree:
+                          try:
+                              if row.attrib.values():
+                                  logging.debug(row.attrib.keys())
+                                  vals = []
+                                  keys = []
+                                  for key, val in row.attrib.items():
+                                      keys.append(key)
+                                      if anathomy[table_name][key] == 'INTEGER':
+                                          vals.append(int(val))
+                                      elif anathomy[table_name][key] == 'BOOLEAN':
+                                          vals.append(1 if val == "TRUE" else 0)
+                                      else:
+                                          vals.append(val)
 
-                              # print(query)
-                              cursor.execute(query)
+                                  query = insert_query.format(
+                                      table = table_name,
+                                      columns = (', ').join(k for k in keys),
+                                      values = sql.SQL(', ').join(sql.Literal(v) for v in vals).as_string(conn)
+                                  )
 
-                              count += 1
-                              if (count % 1000 == 0):
-                                  print("{}".format(count))
+                                  # print(query)
+                                  cursor.execute(query)
 
-                          conn.commit()
+                                  count += 1
+                                  if (count % 1000 == 0):
+                                      print("{}".format(count))
 
-                      except Exception as e:
-                          logging.warning(e)
-                          print("x", end="")
-                      finally:
-                          row.clear()
+                              conn.commit()
 
+                          except Exception as e:
+                              logging.warning(e)
+                              print("x", end="")
+                          finally:
+                              row.clear()
 
                   print("\n")
                   conn.close()
                   del (tree)
-
 
 if __name__ == '__main__':
   dump_files(ANATHOMY.keys(), ANATHOMY)
