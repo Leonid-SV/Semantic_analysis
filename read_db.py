@@ -1,5 +1,5 @@
 # from webapp_f import create_app
-from webapp.forms import ModelPosts, ModelComments, ModelTags
+from webapp.forms import db, ModelPosts, ModelComments, ModelTags
 # from pprint import pprint
 #
 # app = create_app()
@@ -19,7 +19,7 @@ def texts_loundary(text):
     except TypeError:
         return 'Error'
 
-def get_data(inp, db):
+def get_data(inp):
 
     inputs = inp.split()
 
