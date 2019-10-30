@@ -1,29 +1,31 @@
-# описание элементов форм для Html
 from flask_sqlalchemy import SQLAlchemy
-from flask_wtf import FlaskForm
-from wtforms import SubmitField, StringField, TextAreaField
-from wtforms.validators import DataRequired
 
 db = SQLAlchemy()
 
-class ModelComments(db.Model):
+class ModelTest(db.Model):
+    __tablename__ = "test"
     id = db.Column(db.Integer, primary_key=True)
-    id_post= db.Column(db.Integer, nullable=False)
+    text = db.Column(db.Text, nullable=False)
+
+
+class ModelComments(db.Model):
+    __tablename__ = "comments"
+    id = db.Column(db.Integer, primary_key=True)
+    postid = db.Column(db.Integer, nullable=False)
     score = db.Column(db.Integer, nullable=False)
     text = db.Column(db.Text, nullable=False)
-    creation_date = db.Column(db.DateTime, nullable=False)
-    user_id = db.Column(db.Integer, nullable=False)
+    creationdate = db.Column(db.DateTime, nullable=False)
+    userid = db.Column(db.Integer, nullable=False)
+    userdisplayname = db.Column(db.Text, nullable=False)
 
-class SmallTextField(FlaskForm):
-    text = TextAreaField('Запрос', validators=[DataRequired()])
-    submit = SubmitField('Подтвердить', validators=[DataRequired()])
 
 class ModelPosts(db.Model):
+    __tablename__ = "posts"
     id = db.Column(db.Integer, primary_key=True)
     post_type_id = db.Column(db.Integer, nullable=False)
     parent_id = db.Column(db.Text, nullable=False)
     accepted_answer_id = db.Column(db.Integer, nullable=False)
-    creation_date = db.Column(db.DateTime, nullable=False)
+    creation_date = creation_date = db.Column(db.DateTime, nullable=False)
     score = db.Column(db.Integer, nullable=False)
     view_count = db.Column(db.Integer, nullable=False)
     dody = db.Column(db.Text, nullable=False)
@@ -40,3 +42,14 @@ class ModelPosts(db.Model):
     comment_count = db.Column(db.Integer, nullable=False)
     favorite_count = db.Column(db.Integer, nullable=False)
     closed_date = db.Column(db.DateTime, nullable=False)
+
+    # def __repr__(self):
+    #     return '<ModelPosts {} {} >'.format(self.title, self.url)
+
+class ModelTags(db.Model):
+    __tablename__ = "tags"
+    id = db.Column(db.Integer, primary_key=True)
+    tagname = db.Column(db.Text, nullable=False)
+    count = db.Column(db.Integer, nullable=False)
+    excerptpostid = db.Column(db.Integer, nullable=True)
+    wikipostid = db.Column(db.Integer, nullable=False)
