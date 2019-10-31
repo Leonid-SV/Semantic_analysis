@@ -14,24 +14,26 @@ def create_app():  # фабрика Flask
         # текстовые константы для страницы:
 
         title = 'Введите запрос'
-
+        flag = False
         result = ''
         if request.method == 'POST':
             answer = request.form['text']
-
+            flag = True
             try:
-                result = get_data(answer, db)  # main function for getting data by input value
+                result = get_data(answer)  # main function for getting data by input value
+
             except:
                 result = '----- no answer -----'
             finally:
+                flag = True
                 for r in result:
                     print(type(r))
                     print(r)
 
         if request.method == 'GET':
-            return render_template('index.html', title=title, answer='')
+            return render_template('index.html', title=title, answer='', flag=flag)
 
-        return render_template('index.html', title=title, answer=result)
+        return render_template('index.html', title=title, answer=result, flag=flag)
 
     return app
 

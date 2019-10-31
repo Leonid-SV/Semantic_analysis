@@ -1,23 +1,34 @@
 # from webapp_f import create_app
 from webapp.forms import db, ModelPosts, ModelComments, ModelTags
-# from pprint import pprint
-#
+import re
+from pprint import pprint
+
 # app = create_app()
 
-def texts_loundary(text):
-    import re
+
+def text_clean(text):
+
+    pattern_1 = re.compile(r'\bhttp\S*\b[,!?]*')
+    pattern_2 = re.compile(r'[*#$%(\\n)\]\[]')
+
+    patterns = [pattern_1, pattern_2]
+
     try:
-        pattern_1 = re.compile('http://\S*[\s, ]')
-        pattern_2 = re.compile('[@"\[\]<>$#\n]')
+        if type(text) == list:
+            # try:
+            for i in range(len(text)):
+                for p in patterns:
+                    text[i] = re.sub(p, '', text[i])
+        else:
+            for p in patterns:
+                text = re.sub(p, '', text)
 
-        patterns = [pattern_1, pattern_2]
-        for pattern in patterns:
-            text = re.sub(pattern, ' ', text)
-
+        print(text)
         return text
-
-    except TypeError:
+    except:
+        print('Input Error')
         return 'Error'
+
 
 def get_data(inp):
 
@@ -32,10 +43,9 @@ def get_data(inp):
         id_by_tags = [int(p_id[0]) for p_id in postid]
         comments = db.session.query(ModelComments.text).filter(ModelComments.postid.in_(id_by_tags)).all()
 
-        comments_by_id = [texts_loundary(c[0]) for c in comments]
+        comments_by_id = [text_clean(c[0]) for c in comments]
 
         # some prints
-
         # print(tags_by_inp[0])
         # print('+' * 50)
         # pprint(tags_by_inp)
@@ -46,9 +56,21 @@ def get_data(inp):
 
         result.extend(comments_by_id)
 
-    print(result)
+    # print(result)
 
     return result
-#
+
 # with app.app_context():
 #     get_data('pytho ruby', db)
+
+# some_text = ['Realtime image processing using PyPy:http://morepypy.cessing-in-python.html hi there',
+#              'Realtime image processing using PyPy:http://morepypy.blogsphtml, hi there',
+#              'Realtime image processing using PyPy:http://morepypy.cessing-in-python.html hi there',
+#              'Realtime image processing using PyPy:http://morepypy.blogsphtml, hi there'
+#              ]
+#
+#
+# # p = re.compile(r'\bhttp\S*\b[,!?]*')
+#
+# print('+'*100)
+# text_clean(some_text)
