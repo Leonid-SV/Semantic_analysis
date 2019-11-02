@@ -8,6 +8,8 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/css/bootstrap.min.css" integrity="2hfp1SzUoho7/TsGGGDaFdsuuDL0LX2hnUp6VkX3CUQ2K4K+xjboZdsXyp4oUHZj" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/static/css/Style.css">
+    <link href="/static/css/css-circular-prog-bar-2.css" media="all" rel="stylesheet" />
 </head>
 
 <body>
@@ -47,28 +49,64 @@
             </form>
             <br>
         </div>
-
-
-
+    </div>
 </div>
 <br>
 
-    {% if flag %}
+<!-- круговые диаграммы отображения результатов -->
+<div class = 'container' align = "center">
+    <div class="row">
+        <div class = 'col-md-4' >
+            <h3> Good </h3>
+            <div class="{{toxic_vals[0][1]}}">
+                <span>{{toxic_vals[0][0]}}%</span>
+                    <div class="left-half-clipper">
+                    <div class="first50-bar"></div>
+                    <div class="value-bar"></div>
+                </div>
+            </div>
+        </div>
+        <div class = 'col-md-4'>
+            <h3> Bad </h3>
+            <div class="{{toxic_vals[1][1]}}">
+                <span>{{toxic_vals[1][0]}}%</span>
+                    <div class="left-half-clipper">
+                        <div class="first50-bar"></div>
+                        <div class="value-bar"></div>
+                    </div>
+            </div>
+        </div>
+        <div class = 'col-md-4' >
+            <h3> Ugly </h3>
+            <div class="{{toxic_vals[2][1]}}">
+                <span>{{toxic_vals[2][0]}}%</span>
+                    <div class="left-half-clipper">
+                        <div class="first50-bar"></div>
+                        <div class="value-bar"></div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if flag %}
+    <div class = 'container' align = "center">
         <div class = 'container'>
             <div class="row">
-                <div class ='col-md-1' ></div>
+                <div class = 'col-md-2' ></div>
                 <br>
                 <br>
-                <div class ='col-md-1' ></div>
-                <div class = 'col-md-10' style = 'background-color: #8ac4ed'>
+                <div class = 'col-md-2' ></div>
+                <div class = 'col-md-8'>
                     <br>
                     <p>Результат обработки данных:</p> <p> {{answer}} </p>
                     <br>
                 </div>
-                <div class ='col-md-1' ></div>
+                <div class = 'col-md-1' ></div>
             </div>
         </div>
-    {% endif %}
+    </div>
+{% endif %}
 
 <!-- jQuery первый, затем Tether, затем Bootstrap JS. -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha384-THPy051/pYDQGanwU6poAc/hOdQxjnOEXzbT+OuUAFqNqFjL+4IGLBgCJC3ZOShY" crossorigin="anonymous"></script>

@@ -4,6 +4,7 @@ import re
 from pprint import pprint
 
 # app = create_app()
+# from flask import current_app as app # вариант импорта app из запущенного instant
 
 
 def text_clean(text):
