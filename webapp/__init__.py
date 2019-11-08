@@ -4,8 +4,13 @@ from webapp.forms import db, ModelPosts, ModelComments, ModelTags
 from read_db import *
 
 
+# импорт семантического анализа
+from semantic import semantic_res
+
 def f_toxic_vals(v0, v1, v2):
-    ''' processing results function for provide into web-page'''
+    # processing results function for provide into web-page
+    # функция предназначена для передачи данных в index.html в виде частей кода с целью отризовки круговых диаграмм
+    # эмециональности
 
     toxic_rslts = [[], [], []]
 
@@ -23,14 +28,16 @@ def f_toxic_vals(v0, v1, v2):
 
 
 def create_app():  # фабрика Flask
+    # Flask fabrique
+
     app = Flask(__name__)
     app.config.from_pyfile('config.py')
     db.init_app(app)
 
     @app.route('/', methods=['POST', 'GET'])
     def index():
-        # текстовые константы для страницы:
 
+        # временные текстовые константы для страницы:
         v0, v1, v2 = 5, 10, 50
 
         title = 'Введите запрос'
@@ -38,23 +45,41 @@ def create_app():  # фабрика Flask
         result = ''
         if request.method == 'POST':
             answer = request.form['text']
+            answer = answer.lower()
+            # information about answer
+            #
+            print('#'*100)
+            print(type(answer))
+            print(answer)
+            print('#' * 100)
+
+            result = '----- no answer -----'
+            # флаг для вызова отображения результатов на странице html
             flag = True
             try:
-                result = get_data(answer)  # main function for getting data by input value
+                # function for getting data by input value
+                # вызов функции для извлечениия и предобработки данных для предоставления ее в семантический анализатор
+                result = get_data(answer)
 
-            except:
+            except:         # использовать без параметров не реккомендуется, но тут для красоты сделано исключение
                 result = '----- no answer -----'
             finally:
                 flag = True
-                for r in result:
-                    print(type(r))
-                    print(r)
-######################################################
-                # values for visualising results
-                v0 = 65
-                v1 = 15
-                v2 = 20
-######################################################
+                # печать результатов в стадии отладки приложения
+                # for r in result:
+                #     print(type(r))
+                #     print(r)
+
+                result_in_digits = semantic_res(result)
+
+                v0 = result_in_digits['neg']
+                v1 = result_in_digits['neu']
+                v2 = result_in_digits['pos']
+
+                # v0 = 10
+                # v1 = 20
+                # v2 = 30
+
         if request.method == 'GET':
             return render_template('index.html', title=title, answer='', flag=flag, toxic_vals=f_toxic_vals(v0, v1, v2))
 
@@ -64,6 +89,7 @@ def create_app():  # фабрика Flask
 
 ############################
 if __name__ == '__main__':
-    create_app().run(host='0.0.0.0', port='5000', debug=False)
-pi
+    create_app().run(port='5000', debug=True)
+
 #export FLASK_APP=webapp_f && export FLASK_ENV=development && flask run
+#-h 172.19.65.99

@@ -11,10 +11,10 @@ Toxic.jpg
 
 
 # folders
-webapp_f/
 
 # some files
 xml_sqllite_convertor_rbl.py
+test.py
 
 # C extensions
 *.so

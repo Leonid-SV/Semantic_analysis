@@ -1,16 +1,19 @@
+# -*- coding: utf-8 -*-
 # from webapp_f import create_app
 from webapp.forms import db, ModelPosts, ModelComments, ModelTags
 import re
 from pprint import pprint
 
 # app = create_app()
-# from flask import current_app as app # ������� ������� app �� ����������� instant
+# from flask import current_app as app # вариант импорта app из запущенного instant
 
 
 def text_clean(text):
+    #''' функция очистки текста. Может принимать как текст, так и списко из текстовых значений '''
 
+    # паттерны для очистки текста от ссылок и лишникх символов, переносов, скобок
     pattern_1 = re.compile(r'\bhttp\S*\b[,!?]*')
-    pattern_2 = re.compile(r'[*#$%(\\n)\]\[]')
+    pattern_2 = re.compile(r'[+=#$%(\n)\]\[]')
 
     patterns = [pattern_1, pattern_2]
 
@@ -19,34 +22,39 @@ def text_clean(text):
             # try:
             for i in range(len(text)):
                 for p in patterns:
-                    text[i] = re.sub(p, '', text[i])
+                    text[i] = (re.sub(p, '', text[i]))
         else:
             for p in patterns:
-                text = re.sub(p, '', text)
+                text = (re.sub(p, '', text))
 
         print(text)
         return text
+
     except:
         print('Input Error')
         return 'Error'
 
 
 def get_data(inp):
-
+    # функция извлечения данных из базы данных postgresql посредством Фласк-алхимии (SQLAlchemy)
+    
     inputs = inp.split()
 
     result = []
 
     for inp in inputs:
+        # добываем тэги по запросу из базы тэгов
         tags = db.session.query(ModelTags.tagname).filter(ModelTags.tagname.like(inp + '%')).all()
         tags_by_inp = [tag[0] for tag in tags]
-        postid = db.session.query(ModelPosts.id).filter(ModelPosts.tags.like('%<'+tags_by_inp[0]+'>%')).limit(100).all()
+        # добываем ID постов, соответствующие тэгам из базы постов
+        postid = db.session.query(ModelPosts.id).filter(ModelPosts.tags.like('%<'+tags_by_inp[0]+'>%')).all()
         id_by_tags = [int(p_id[0]) for p_id in postid]
+        # добываем комментарии по ID постов из базы комментариев
         comments = db.session.query(ModelComments.text).filter(ModelComments.postid.in_(id_by_tags)).all()
 
         comments_by_id = [text_clean(c[0]) for c in comments]
 
-        # some prints
+        # печать данных для отладки
         # print(tags_by_inp[0])
         # print('+' * 50)
         # pprint(tags_by_inp)
@@ -74,4 +82,4 @@ def get_data(inp):
 # # p = re.compile(r'\bhttp\S*\b[,!?]*')
 #
 # print('+'*100)
-# text_clean(some_text)
+# print(text_clean('''Python is good http:\\someshit here is += all GooD''' ))

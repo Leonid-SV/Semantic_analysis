@@ -35,7 +35,7 @@
     <div class="row">
 
         <div class ='col-md-2' ></div>
-        <div class ='col-md-8' style = 'background-color: #8ac4ed'>
+        <div class ='col-md-8'>
             <br>
             <p class="form-control-static">Введите ключевые темы для оценки ее токсичности</p>
             <form action="" method="post">
@@ -53,11 +53,14 @@
 </div>
 <br>
 
+
+
+{% if flag %}
 <!-- круговые диаграммы отображения результатов -->
 <div class = 'container' align = "center">
     <div class="row">
         <div class = 'col-md-4' >
-            <h3> Good </h3>
+            <h3> Токсичность </h3>
             <div class="{{toxic_vals[0][1]}}">
                 <span>{{toxic_vals[0][0]}}%</span>
                     <div class="left-half-clipper">
@@ -67,7 +70,7 @@
             </div>
         </div>
         <div class = 'col-md-4'>
-            <h3> Bad </h3>
+            <h3> Нейтральность </h3>
             <div class="{{toxic_vals[1][1]}}">
                 <span>{{toxic_vals[1][0]}}%</span>
                     <div class="left-half-clipper">
@@ -77,7 +80,7 @@
             </div>
         </div>
         <div class = 'col-md-4' >
-            <h3> Ugly </h3>
+            <h3> Позитивность </h3>
             <div class="{{toxic_vals[2][1]}}">
                 <span>{{toxic_vals[2][0]}}%</span>
                     <div class="left-half-clipper">
@@ -89,23 +92,22 @@
     </div>
 </div>
 
-{% if flag %}
-    <div class = 'container' align = "center">
-        <div class = 'container'>
-            <div class="row">
-                <div class = 'col-md-2' ></div>
-                <br>
-                <br>
-                <div class = 'col-md-2' ></div>
-                <div class = 'col-md-8'>
-                    <br>
-                    <p>Результат обработки данных:</p> <p> {{answer}} </p>
-                    <br>
-                </div>
-                <div class = 'col-md-1' ></div>
-            </div>
-        </div>
-    </div>
+<!--<div class = 'container' align = "center">-->
+    <!--<div class = 'container'>-->
+        <!--<div class="row">-->
+            <!--<div class = 'col-md-2' ></div>-->
+            <!--<br>-->
+            <!--<br>-->
+            <!--<div class = 'col-md-2' ></div>-->
+            <!--<div class = 'col-md-8'>-->
+                <!--<br>-->
+                <!--<p>Результат обработки данных:</p> <p> {{answer}} </p>-->
+                <!--<br>-->
+            <!--</div>-->
+            <!--<div class = 'col-md-1' ></div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
 {% endif %}
 
 <!-- jQuery первый, затем Tether, затем Bootstrap JS. -->
