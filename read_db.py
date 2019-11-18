@@ -78,7 +78,6 @@ def get_data(inp):
 #              'Realtime image processing using PyPy:http://morepypy.blogsphtml, hi there'
 #              ]
 #
-#
 # # p = re.compile(r'\bhttp\S*\b[,!?]*')
 #
 # print('+'*100)
