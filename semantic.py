@@ -43,7 +43,6 @@ def semantic_res(text_data):
 
     del semi_result
 
-
     return result
 
 

@@ -48,6 +48,7 @@ class ModelPosts(db.Model):
     # def __repr__(self):
     #     return '<ModelPosts {} {} >'.format(self.title, self.url)
 
+
 class ModelTags(db.Model):
     __tablename__ = "tags"
     id = db.Column(db.Integer, primary_key=True)

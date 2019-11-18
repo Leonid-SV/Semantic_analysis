@@ -7,14 +7,12 @@ from pprint import pprint
 # app = create_app()
 # from flask import current_app as app # вариант импорта app из запущенного instant
 
-
 def text_clean(text):
     #''' функция очистки текста. Может принимать как текст, так и списко из текстовых значений '''
 
     # паттерны для очистки текста от ссылок и лишникх символов, переносов, скобок
     pattern_1 = re.compile(r'\bhttp\S*\b[,!?]*')
     pattern_2 = re.compile(r'[+=#$%(\n)\]\[]')
-
     patterns = [pattern_1, pattern_2]
 
     try:
