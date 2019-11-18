@@ -28,7 +28,6 @@ def f_toxic_vals(v0, v1, v2):
 
 
 def create_app():  # фабрика Flask
-    # Flask fabrique
 
     app = Flask(__name__)
     app.config.from_pyfile('config.py')

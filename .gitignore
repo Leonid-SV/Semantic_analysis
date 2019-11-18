@@ -22,6 +22,7 @@ test.py
 # Distribution / packaging
 .Python
 build/
+connection_to_db/
 develop-eggs/
 dist/
 downloads/
